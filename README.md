@@ -1,8 +1,6 @@
 # Linux System Report
 
 A Bash script that generates a readable Linux system report, including system information, disk usage, memory usage, and service status.
-
-Created by Mostafa (sdmx44)
 ## Features
 
 - Date
@@ -13,6 +11,7 @@ Created by Mostafa (sdmx44)
 - Disk Usage
 - Memory Usage
 - Service Status
+- Active Network 
 
 ## Technologies
 

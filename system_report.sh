@@ -3,7 +3,7 @@
 # =====================================
 # Linux System Report
 # Author: sdmx44
-# Version: 1.0
+# Version: 1.1.0
 # Description:
 # Generates a simple Linux system report.
 # =====================================
