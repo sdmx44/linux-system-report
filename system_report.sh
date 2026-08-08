@@ -3,11 +3,12 @@
 # =====================================
 # Linux System Report
 # Author: sdmx44
-# Version: 1.0 
+# Version: 1.0
 # Description:
 # Generates a simple Linux system report.
 # =====================================
 
+#Functions :
 print_header(){
 
 echo "=========================================="
@@ -44,7 +45,7 @@ show_disk_usage(){
 	AVAILABLE=$( echo "$DISK_INFO" | awk '{print $4}')
 	USAGE=$( echo "$DISK_INFO" | awk '{print $5}')
 	MOUNT=$( echo "$DISK_INFO" | awk '{print $6}')
-	
+
 echo
 echo "========== Disk Usage =========="
 echo "Filesystem : $FILESYSTEM"
@@ -70,13 +71,43 @@ echo "======== Memory Usage =========="
 echo "Total RAM  : $MEM_TOTAL"
 echo "Used RAM   : $MEM_USED"
 echo "Free RAM   : $MEM_FREE"
-echo 
-echo "Total Swap  : $SWAP_TOTAL"
-echo "Used Swap   : $SWAP_USED"
-echo "Free Swap   : $SWAP_FREE"
+echo
+echo "Total Swap : $SWAP_TOTAL"
+echo "Used Swap  : $SWAP_USED"
+echo "Free Swap  : $SWAP_FREE"
 
 }
+show_network(){
+    if ip route get 1.1.1.1 &>/dev/null
+    then
+        ROUTE_INFO=$(ip route get 1.1.1.1)
 
+        DEVICE=$(awk '{print $5}' <<< "$ROUTE_INFO")
+        DEVICE_IP=$(awk '{print $7}' <<< "$ROUTE_INFO")
+        DEVICE_GATEWAY=$(awk '{print $3}' <<< "$ROUTE_INFO")
+    else
+        DEVICE="Not connected"
+        DEVICE_IP="Not connected"
+        DEVICE_GATEWAY="Not connected"
+    fi
+
+    if ip -6 route get 2606:4700:4700::1111 &>/dev/null
+    then
+        IPV6=$(ip -6 route get 2606:4700:4700::1111 | awk '{print $7}')
+    else
+        IPV6="Not available"
+    fi
+
+echo "=========== Network ============"
+
+echo "Interface : $DEVICE"
+echo "IPv4      : $DEVICE_IP"
+echo "IPv6      : $IPV6"
+echo "Gateway   : $DEVICE_GATEWAY"
+
+
+
+}
 show_services(){
 
 	SSH_STATUS=$(systemctl is-active sshd)
@@ -87,7 +118,7 @@ echo "========== Services ============"
 if [ "$SSH_STATUS" = "active" ]; then
 	echo "SSH service   : Running"
 else
-	echo "SSH service   : Stopped"	
+	echo "SSH service   : Stopped"
 fi
 if [ "$FIREWALL_STATUS" = "active" ]; then
 	echo "Firewall      : Running"
@@ -95,6 +126,9 @@ else
 	echo "Firewall      : Stopped"
 fi
 }
+
+#Execution :
+
 echo
 print_header
 echo
@@ -108,6 +142,8 @@ echo
 show_disk_usage
 echo
 show_memory_usage
+echo
+show_network
 echo
 show_services
 echo
